@@ -32,15 +32,30 @@ class App extends Component {
   getVehicles() {
     // axios (GET)
     // setState with response -> vehiclesToDisplay
+
+    axios.get('https://joes-autos.herokuapp.com/api/vehicles').then((resp) => {
+      console.log(resp.data)
+      this.setState({vehiclesToDisplay: resp.data}) 
+    }).catch(err =>{
+      console.log(err)
+    })
   }
 
   getPotentialBuyers() {
     // axios (GET)
+
+    axios.get('https://joes-autos.herokuapp.com/api/buyers').then((resp) => {
+    this.setState({buyersToDisplay: resp.data })
+    })
     // setState with response -> buyersToDisplay
   }
 
   sellCar(id) {
     // axios (DELETE)
+    axios.delete(`https://joes-autos.herokuapp.com/api/vehicles/${id}`).then((resp) => {
+      console.log(resp)
+      this.setState({vehiclesToDisplay: resp.data.vehicles})
+    })
     // setState with response -> vehiclesToDisplay
   }
 
@@ -56,8 +71,11 @@ class App extends Component {
     // setState with response -> vehiclesToDisplay
   }
 
-  updatePrice(priceChange) {
+  updatePrice(priceChange, id) {
     // axios (PUT)
+    axios.put(`https://joes-autos.herokuapp.com/api/vehicles/${id}/${priceChange}`).then((resp) => {
+      this.setState({vehiclesToDisplay: resp.data.vehicles})
+    })
     // setState with response -> vehiclesToDisplay
   }
 
@@ -126,11 +144,11 @@ resetData(dataToReset) {
           <p>Price: { v.price }</p>
           <button
             className='btn btn-sp'
-            onClick={ () => this.updatePrice('up') }
+            onClick={ () => this.updatePrice('up', v.id) }
             >Increase Price</button>
           <button
             className='btn btn-sp'
-            onClick={ () => this.updatePrice('down') }
+            onClick={ () => this.updatePrice('down', v.id) }
             >Decrease Price</button>  
           <button 
             className='btn btn-sp'
